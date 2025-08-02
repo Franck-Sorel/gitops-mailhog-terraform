@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mailhog-prod
+  namespace: argocd
+  labels:
+    app: mailhog
+    environment: prod
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/franck-sorel/gitops-mailhog-terraform.>
+    targetRevision: HEAD
+    path: manifests/overlays/prod
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: mailhog-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+  revisionHistoryLimit: 3
+
+
+
